@@ -10,10 +10,10 @@ include('includes/header.php');
 		<h1>Our Selection of Shirts</h1>
 		<?php include("includes/products.php"); ?>
 		<ul class="products">
-			<?php foreach($shirts as $product_id => $shirt) {
+			<?php foreach($shirts as $product_id => $product) {
 			echo "<li>"; 
 			echo '<a href="detail.php?id=' . $product_id . '">';
-			echo '<img src="' . $shirt["img"] . '" alt="' . $shirt["name"] .'">';
+			echo '<img src="' . $product["img"] . '" alt="' . $product["name"] .'">';
 			echo "</a>";
 			echo "<p>View Details</p>"; 
 			echo "</li>";

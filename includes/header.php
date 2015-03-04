@@ -19,7 +19,7 @@
 				<li class="<?php if ($section == "shirts") { echo "on"; } ?>"><a href="shirts.php">Shirts</a></li>
 				<li class="<?php if ($section == "pants") { echo "on"; } ?>"><a href="pants.php">Pants</a></li>
 				<li class="<?php if ($section == "contact") { echo "on"; } ?>"><a href="contact.php">Contact Us</a></li>
-				<li class="cart"><a href="#">Shopping Cart</a></li>
+				<li class="cart"><a target="paypal" href="https://www.paypal.com/cgi-bin/webscr?cmd=_cart&amp;business=N39HQ3NWS2ETS&amp;display=1">Shopping Cart</a></li>
 			</ul>
 		</div>
 	</div>

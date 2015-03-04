@@ -1,15 +1,51 @@
 <?php 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = $_POST["name"];
-    $email =  $_POST["email"];
-    $message =  $_POST["message"];
+    $name = trim($_POST["name"]);
+    $email = trim($_POST["email"]);
+    $message = trim($_POST["message"]);
+
+
+    if ($name == "" OR $email == "" OR $message == "") {
+        echo "You must specify a value for name, email address, and message.";
+        exit;
+    }
+
+    foreach( $_POST as $value ){
+        if( stripos($value,'Content-Type:') !== FALSE ){
+            echo "There was a problem with the information you entered.";    
+            exit;
+        }
+    }
+
+    if ($_POST["address"] != "") {
+        echo "Your form submission has an error.";
+        exit;
+    }
+
+    require_once("includes/phpmailer/class.phpmailer.php");
+    $mail = new PHPMailer();
+
+    if (!$mail->ValidateAddress($email)){
+        echo "You must specify a valid email address.";
+        exit;
+    }
+
     $email_body = "";
-    $email_body = $email_body . "Name: " . $name . "\n";
-    $email_body = $email_body . "Email: " . $email . "\n";
+    $email_body = $email_body . "Name: " . $name . "<br>";
+    $email_body = $email_body . "Email: " . $email . "<br>";
     $email_body = $email_body . "Message: " . $message;
 
-    // TODO: Send Email
+    $mail->SetFrom($email, $name);
+    $address = "darkdoglab@gmail.com";
+    $mail->AddAddress($address, "Angry Aura Clothing");
+    $mail->Subject    = "Angry Aura Form Submission | " . $name;
+    $mail->MsgHTML($email_body);
+
+    if(!$mail->Send()) {
+      echo "There was a problem sending the email: " . $mail->ErrorInfo;
+      exit;
+    }
 
     header("Location: contact.php?status=thanks");
     exit;
@@ -20,16 +56,17 @@ $aura = "Angry Aura Clothing";
 $section = "contact";
 include('includes/header.php'); ?>
 
-	<div class="section page">
+    <div class="section page">
 
-		<div class="wrapper">
+        <div class="wrapper">
+
+            <h1>Contact</h1>
 
             <?php if (isset($_GET["status"]) AND $_GET["status"] == "thanks") { ?>
-                <h1>Thank You!</h1>	
-				<p>Thank you for your message. We will get back to you as soon as possible.</p>
+                <p>Thanks for the email! We&rsquo;ll get back to you shortly!</p>
             <?php } else { ?>
 
-                <h1>Contact Us</h1>
+                <p>We&rsquo;d love to hear from you!</p>
 
                 <form method="post" action="contact.php">
 
@@ -57,7 +94,16 @@ include('includes/header.php'); ?>
                             <td>
                                 <textarea name="message" id="message"></textarea>
                             </td>
-                        </tr>                    
+                        </tr> 
+                        <tr style="display: none;">
+                            <th>
+                                <label for="address">Address</label>
+                            </th>
+                            <td>
+                                <input type="text" name="address" id="address">
+                                <p>Please leave this field blank.</p>
+                            </td>
+                        </tr>                   
                     </table>
                     <input type="submit" value="Send">
 
@@ -67,6 +113,6 @@ include('includes/header.php'); ?>
 
         </div>
 
-	</div>
+    </div>
 
-<?php include('inc/footer.php') ?>
+<?php include('includes/footer.php') ?>
